@@ -43,6 +43,10 @@ cd new-charter-omarchy
 ./install.sh
 ```
 
+Running `./install.sh` again is safe and idempotent. To switch from another
+branding pack, run this repository's installer; to switch back, run the other
+pack's installer. Each pack keeps its own recoverable snapshots.
+
 The default installation applies the desktop theme and then prompts for sudo
 to publish the boot/login branding. Use a user-only installation when system
 branding is not desired:

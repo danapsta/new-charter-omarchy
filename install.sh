@@ -121,17 +121,21 @@ if [[ -f $uwsm_target ]]; then
   awk '
     $0 == "# BEGIN NEW CHARTER OMARCHY" { skip=1; next }
     $0 == "# END NEW CHARTER OMARCHY" { skip=0; next }
+    $0 == "# BEGIN TOASTY SYSTEMS OMARCHY" { skip=1; next }
+    $0 == "# END TOASTY SYSTEMS OMARCHY" { skip=0; next }
+    $0 == "# BEGIN OMARCHY BRAND PACK PATH" { skip=1; next }
+    $0 == "# END OMARCHY BRAND PACK PATH" { skip=0; next }
     !skip { print }
   ' "$uwsm_target" >"$uwsm_tmp"
 fi
 cat >>"$uwsm_tmp" <<'EOF'
 
-# BEGIN NEW CHARTER OMARCHY
+# BEGIN OMARCHY BRAND PACK PATH
 case ":$PATH:" in
   *":$HOME/.local/bin:"*) ;;
   *) export PATH="$HOME/.local/bin:$PATH" ;;
 esac
-# END NEW CHARTER OMARCHY
+# END OMARCHY BRAND PACK PATH
 EOF
 install -m 0644 "$uwsm_tmp" "$uwsm_target"
 rm -f -- "$uwsm_tmp"

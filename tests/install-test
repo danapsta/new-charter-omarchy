@@ -49,7 +49,7 @@ test -f "$XDG_CONFIG_HOME/omarchy/themes/new-charter/backgrounds/1-new-charter-p
 jq -e '.personal.label == "Personal"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
 jq -e '.["learn.omarchy"].label == "New Charter"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
 jq -e '.["update.omarchy"].label == "New Charter"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
-[[ $(rg -c '^# BEGIN NEW CHARTER OMARCHY$' "$XDG_CONFIG_HOME/uwsm/default") == 1 ]]
+[[ $(rg -c '^# BEGIN OMARCHY BRAND PACK PATH$' "$XDG_CONFIG_HOME/uwsm/default") == 1 ]]
 rg -q '^export EXISTING_SETTING=yes$' "$XDG_CONFIG_HOME/uwsm/default"
 
 omarchy theme set "New Charter"

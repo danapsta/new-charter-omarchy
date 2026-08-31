@@ -22,13 +22,13 @@ for config in "${candidates[@]}"; do
   backup="${config}${backup_suffix}"
 
   if [[ $mode == install ]]; then
-    if grep -q '^interface_branding: Omarchy Bootloader$' "$config"; then
-      [[ -e $backup ]] || cp --archive -- "$config" "$backup"
-      sed -i 's/^interface_branding: Omarchy Bootloader$/interface_branding: New Charter/' "$config"
-      echo "Updated $config (backup: $backup)"
-      changed=1
-    elif grep -q '^interface_branding: New Charter$' "$config"; then
+    if grep -q '^interface_branding: New Charter$' "$config"; then
       echo "Already branded: $config"
+      changed=1
+    elif grep -q '^interface_branding:' "$config"; then
+      [[ -e $backup ]] || cp --archive -- "$config" "$backup"
+      sed -i 's/^interface_branding:.*/interface_branding: New Charter/' "$config"
+      echo "Updated $config (backup: $backup)"
       changed=1
     fi
   elif [[ -f $backup ]] && grep -q '^interface_branding: New Charter$' "$config"; then
