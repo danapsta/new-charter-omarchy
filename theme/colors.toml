@@ -1,0 +1,32 @@
+mode = "dark"
+
+# New Charter's 2026 identity: warm paper, ink, coral, sky, and signal yellow.
+accent = "#E35036"
+selection = "#4A2A25"
+muted = "#5D5652"
+
+background = "#1D1919"
+dark_background = "#171414"
+darker_background = "#100E0E"
+lighter_background = "#292424"
+
+foreground = "#F9F7F5"
+dark_foreground = "#A9A39E"
+light_foreground = "#FFFDFC"
+bright_foreground = "#FFFFFF"
+
+red = "#FF5268"
+yellow = "#FFEB76"
+orange = "#E35036"
+green = "#9BCB8A"
+cyan = "#C0DDE3"
+blue = "#63B2E3"
+magenta = "#D99ABD"
+brown = "#A07A6B"
+
+bright_red = "#FF7283"
+bright_yellow = "#FFF19A"
+bright_green = "#B4DCA5"
+bright_cyan = "#D6E9ED"
+bright_blue = "#8BC8EA"
+bright_magenta = "#E8B4D0"

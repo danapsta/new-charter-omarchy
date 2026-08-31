@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+
+repo_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+test_home=$(mktemp -d)
+trap 'rm -rf -- "$test_home"' EXIT
+
+export HOME="$test_home"
+export XDG_CONFIG_HOME="$test_home/.config"
+export XDG_STATE_HOME="$test_home/.local/state"
+export XDG_RUNTIME_DIR="$test_home/run"
+export OMARCHY_PATH=/usr/share/omarchy
+export OMARCHY_THEME_HEADLESS=1
+
+mkdir -p \
+  "$XDG_CONFIG_HOME/omarchy/branding" \
+  "$XDG_CONFIG_HOME/omarchy/extensions" \
+  "$XDG_CONFIG_HOME/fastfetch" \
+  "$XDG_CONFIG_HOME/uwsm" \
+  "$HOME/.local/bin" \
+  "$XDG_RUNTIME_DIR"
+
+cat >"$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" <<'EOF'
+{
+  // This entry and its URL must survive JSONC parsing.
+  "personal": {
+    "icon": "x",
+    "label": "Personal",
+    "action": "open 'https://example.com/path'",
+  },
+}
+EOF
+printf 'original about\n' >"$XDG_CONFIG_HOME/omarchy/branding/about.txt"
+printf 'original screensaver\n' >"$XDG_CONFIG_HOME/omarchy/branding/screensaver.txt"
+printf '{"original":true}\n' >"$XDG_CONFIG_HOME/fastfetch/config.jsonc"
+printf 'export EXISTING_SETTING=yes\n' >"$XDG_CONFIG_HOME/uwsm/default"
+printf '#!/bin/sh\necho original logo\n' >"$HOME/.local/bin/omarchy-show-logo"
+printf '#!/bin/sh\necho original presentation\n' >"$HOME/.local/bin/omarchy-launch-floating-terminal-with-presentation"
+
+cp -a "$XDG_CONFIG_HOME" "$test_home/original-config"
+cp -a "$HOME/.local/bin" "$test_home/original-bin"
+
+"$repo_dir/install.sh" --user-only --no-activate
+"$repo_dir/install.sh" --user-only --no-activate
+
+test -f "$XDG_CONFIG_HOME/omarchy/themes/new-charter/colors.toml"
+test -f "$XDG_CONFIG_HOME/omarchy/themes/new-charter/backgrounds/1-new-charter-path.png"
+jq -e '.personal.label == "Personal"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
+jq -e '.["learn.omarchy"].label == "New Charter"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
+jq -e '.["update.omarchy"].label == "New Charter"' "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc" >/dev/null
+[[ $(rg -c '^# BEGIN NEW CHARTER OMARCHY$' "$XDG_CONFIG_HOME/uwsm/default") == 1 ]]
+rg -q '^export EXISTING_SETTING=yes$' "$XDG_CONFIG_HOME/uwsm/default"
+
+omarchy theme set "New Charter"
+[[ $(omarchy theme current) == "New Charter" ]]
+jq -e '.name == "New Charter"' "$XDG_STATE_HOME/omarchy/current/theme/claude.json" >/dev/null
+jq -e '.name == "New Charter"' "$XDG_STATE_HOME/omarchy/current/theme/vscode-theme.json" >/dev/null
+
+"$repo_dir/uninstall.sh"
+
+cmp "$test_home/original-config/omarchy/branding/about.txt" "$XDG_CONFIG_HOME/omarchy/branding/about.txt"
+cmp "$test_home/original-config/omarchy/branding/screensaver.txt" "$XDG_CONFIG_HOME/omarchy/branding/screensaver.txt"
+cmp "$test_home/original-config/omarchy/extensions/omarchy-menu.jsonc" "$XDG_CONFIG_HOME/omarchy/extensions/omarchy-menu.jsonc"
+cmp "$test_home/original-config/fastfetch/config.jsonc" "$XDG_CONFIG_HOME/fastfetch/config.jsonc"
+cmp "$test_home/original-config/uwsm/default" "$XDG_CONFIG_HOME/uwsm/default"
+diff -ru "$test_home/original-bin" "$HOME/.local/bin"
+test ! -e "$XDG_CONFIG_HOME/omarchy/themes/new-charter"
+test ! -e "$XDG_CONFIG_HOME/omarchy/themed/vscode-theme.json.tpl"
+test ! -e "$XDG_CONFIG_HOME/omarchy/themed/claude.json.tpl"
+
+echo "Installer integration test passed."

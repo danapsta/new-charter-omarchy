@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -euo pipefail
+
+repo_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+scratch=$(mktemp -d)
+trap 'rm -rf -- "$scratch"' EXIT
+
+for command in rsvg-convert magick; do
+  command -v "$command" >/dev/null || {
+    echo "Missing required command: $command" >&2
+    exit 1
+  }
+done
+
+rsvg-convert -w 3840 -h 2160 -o "$scratch/wallpaper.png" "$repo_dir/assets/wallpaper-source.svg"
+rsvg-convert -w 920 -h 112 -o "$scratch/logo-wallpaper.png" "$repo_dir/assets/new-charter-logo-white.svg"
+magick "$scratch/wallpaper.png" "$scratch/logo-wallpaper.png" \
+  -gravity northwest -geometry +230+1450 -composite \
+  "$repo_dir/theme/backgrounds/1-new-charter-path.png"
+
+rsvg-convert -o "$scratch/unlock.png" "$repo_dir/assets/unlock-source.svg"
+rsvg-convert -w 820 -h 100 -o "$scratch/logo-unlock.png" "$repo_dir/assets/new-charter-logo-white.svg"
+magick "$scratch/unlock.png" "$scratch/logo-unlock.png" \
+  -gravity center -geometry +0-65 -composite "$repo_dir/theme/unlock.png"
+
+rsvg-convert -o "$scratch/preview-unlock.png" "$repo_dir/assets/preview-unlock-source.svg"
+rsvg-convert -w 740 -h 90 -o "$scratch/logo-preview.png" "$repo_dir/assets/new-charter-logo-white.svg"
+magick "$scratch/preview-unlock.png" "$scratch/logo-preview.png" \
+  -gravity center -geometry +0-90 -composite "$repo_dir/theme/preview-unlock.png"
+
+magick "$repo_dir/theme/backgrounds/1-new-charter-path.png" \
+  -resize 1920x1080 "$repo_dir/theme/preview.png"
+
+echo "Rebuilt New Charter theme artwork."

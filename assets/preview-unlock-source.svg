@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#1D1919"/>
+  <path d="M1420 0 H1920 V390 L1520 790 H1235 L1645 320 Z" fill="#63B2E3" opacity="0.22"/>
+  <path d="M1690 315 L1920 95 V595 L1600 915 H1405 Z" fill="#E35036"/>
+  <path d="M1785 720 L1920 590 V820 L1810 930 H1690 Z" fill="#FFEB76"/>
+  <line x1="660" y1="655" x2="1260" y2="655" stroke="#F9F7F5" stroke-opacity="0.24" stroke-width="2"/>
+  <text x="960" y="712" text-anchor="middle" fill="#F9F7F5" font-family="Noto Sans, sans-serif" font-size="26" letter-spacing="6">YOUR IT PARTNER FOR THE PATH AHEAD.</text>
+  <rect x="817" y="780" width="286" height="48" fill="none" stroke="#F9F7F5" stroke-width="3"/>
+</svg>

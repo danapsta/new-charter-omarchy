@@ -1,0 +1,14 @@
+{
+  "learn.omarchy": {
+    "icon": "",
+    "label": "New Charter",
+    "description": "Your IT partner for the path ahead",
+    "action": "omarchy-launch-webapp 'https://www.newchartertech.com/'"
+  },
+  "update.omarchy": {
+    "icon": "󰚰",
+    "iconFont": "JetBrainsMono Nerd Font",
+    "label": "New Charter",
+    "action": "$HOME/.local/bin/omarchy-launch-floating-terminal-with-presentation omarchy-update"
+  }
+}
